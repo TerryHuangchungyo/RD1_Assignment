@@ -1,0 +1,31 @@
+-- 創建資料庫
+DROP DATABASE IF EXISTS RD1;
+CREATE DATABASE RD1;
+
+-- 創建天氣預報資料表
+DROP TABLE IF EXISTS weather;
+CREATE TABLE weather (
+    cityName varchar(15) not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    minT tinyint,
+    maxT tinyint,
+    weatherClass tinyint,
+    weatherCond char(30),
+    comfortIdx tinyint,
+    rainProb tinyint,
+    wind tinyint,
+    CONSTRAINT pk_Weather_Idx PRIMARY KEY ( cityName, startTime, endTime )
+) DEFAULT CHARSET=utf8;
+
+-- 創建雨量累計資料表
+DROP TABLE IF EXISTS droplet;
+CREATE TABLE droplet (
+    cityName varchar(15) not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    rain_1hr float,
+    rain_24hr float,
+    CONSTRAINT pk_Weather_Idx PRIMARY KEY ( cityName, startTime, endTime )
+) DEFAULT CHARSET=utf8;
+
