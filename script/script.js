@@ -1,18 +1,116 @@
-import {TW_AreaName} from "./config.js";
+import config from "./config.js";
+
+var weekWeatherDataset;
+var currentIndex;
 
 $(document).ready(function(){
-    for( let cityName of Object.keys(TW_AreaName) ) {
+    for( let cityName of config.TW_AreaName ) {
         $("#city").append(`<option>${cityName}</option>`);
     }
 
     /* 當城市查詢頁面框改變時，更新當前天氣，並更新地區的下拉式選單。 */
     $("#city").change(function(){
         $("#cityName").text($(this).val());
+        getWeatherData( updateTodayWeatherUI, config.todayWeatherUrl, $("#city").val() );
+        getWeatherData( updateTwodayWeatherUI, config.twodayWeatherUrl, $("#city").val() );
+        getWeatherData( updateWeekWeatherUI, config.weekWeatherUrl, $("#city").val() );
     });
+
+    $("#city").trigger("change");
 });
 
-function getTodayWeather() {
+function getWeatherData( callback = null, resourceUrl ,cityName ) {
+    $.ajax({
+        url: resourceUrl + cityName,
+        type: "GET"
+    }).done( function( dataset ) {
+        callback( dataset );
+    }).fail(function(){
+        alert("載入失敗");
+    });
+}
 
+function updateTodayWeatherUI( dataset ) {
+    let data = dataset[0];
+    $("#today_maxT").text( data["maxT"] );
+    $("#today_minT").text( data["minT"] );
+    $("#today_weatherCond").text( data["weatherCond"] );
+    $("#today_comfortIdx").text( comfortIdxStmt(data["comfortIdx"]) );
+    $("#today_rainProb").text( data["rainProb"] );
+    $("#today_wind").text( data["wind"] );
+}
+
+function updateTwodayWeatherUI( dataset ) {
+    for( let idx in dataset ) {
+        let data = dataset[idx];
+        let fieldset = $("div .twoday-info").eq(idx);
+        fieldset.find('span.minT').text( data["minT"] );
+        fieldset.find('span.maxT').text( data["maxT"] );
+        fieldset.find('span.weatherCond').text( data["weatherCond"] );
+        fieldset.find('span.comfortIdx').text( comfortIdxStmt(data["comfortIdx"]) );
+        fieldset.find('span.rainProb').text( data["rainProb"] );
+        fieldset.find('span.wind').text( data["wind"] );
+    }
+}
+
+function updateWeekWeatherUI( dataset ) {
+    tranDataFormat( dataset );
+    $("#weatherBoxset").empty();
+    if( Object.keys(weekWeatherDataset).length !== 0 ) {
+        for( let date in weekWeatherDataset ) {
+            let weatherBox = $("<div></div>").addClass("little-box")
+                                            .addClass("bg-light")
+                                            .addClass("p-2")
+                                            .addClass("border")
+                                            .addClass("rounded")
+                                            .appendTo($("#weatherBoxset"));
+            let month = parseInt(date.split("-")[1]);
+            let day = parseInt(date.split("-")[2]);
+            $("<h5></h5>").addClass("text-center").text(`${month}/${day}`).appendTo(weatherBox);
+            $("<div></div>").appendTo( weatherBox );
+            let minT = weekWeatherDataset[date][0]["minT"]; 
+            let maxT = weekWeatherDataset[date][0]["maxT"];
+
+            $("<p></p>").addClass("text-center")
+            .html(`<span>${maxT}</span>°&nbsp;&nbsp;<span class="text-secondary">${minT}</span>°`)
+            .appendTo( weatherBox );
+
+            weatherBox.click( function () {
+                $("#weatherBoxset").find(".little-box").eq(currentIndex).toggleClass("border-primary");
+                currentIndex = $("#weatherBoxset").find(".little-box").index($(this));
+                $(this).toggleClass("border-primary");
+
+                let weekWeatherData = weekWeatherDataset[Object.keys(weekWeatherDataset)[currentIndex]];
+                console.log( weekWeatherData );
+                for( let idx in weekWeatherData ) {
+                    let data = weekWeatherData[idx];
+                    let fieldset = $("div .week-info").eq(idx);
+                    fieldset.find('span.minT').text( data["minT"] );
+                    fieldset.find('span.maxT').text( data["maxT"] );
+                    fieldset.find('span.weatherCond').text( data["weatherCond"] );
+                    fieldset.find('span.comfortIdx').text( comfortIdxStmt(data["comfortIdx"]) );
+                    fieldset.find('span.rainProb').text( data["rainProb"] );
+                    fieldset.find('span.wind').text( data["wind"] );
+                }
+            })
+        }
+
+        /* 獲取第一筆資料更新畫面 */
+        let weekWeatherData = weekWeatherDataset[Object.keys(weekWeatherDataset)[0]];
+        console.log(weekWeatherData);
+        for( let idx in weekWeatherData ) {
+            let data = weekWeatherData[idx];
+            let fieldset = $("div .week-info").eq(idx);
+            fieldset.find('span.minT').text( data["minT"] );
+            fieldset.find('span.maxT').text( data["maxT"] );
+            fieldset.find('span.weatherCond').text( data["weatherCond"] );
+            fieldset.find('span.comfortIdx').text( comfortIdxStmt(data["comfortIdx"]) );
+            fieldset.find('span.rainProb').text( data["rainProb"] );
+            fieldset.find('span.wind').text( data["wind"] );
+        }
+        currentIndex = 0;
+        $("#weatherBoxset").find(".little-box").eq(0).toggleClass("border-primary");
+    }
 }
 
 function objToQuery( obj ) {
@@ -27,3 +125,38 @@ function objToQuery( obj ) {
     return str.join("&");
 }
 
+function comfortIdxStmt( comfortIdx ) {
+    if( comfortIdx < 10 ) {
+        return "非常寒冷";
+    } else if( 11 <= comfortIdx && comfortIdx <= 15 ) {
+        return "寒冷";
+    } else if( 16 <= comfortIdx && comfortIdx <= 19 ) {
+        return "稍有寒意";
+    } else if( 20 <= comfortIdx && comfortIdx <= 26 ) {
+        return "舒適";
+    } else if( 27 <= comfortIdx && comfortIdx <= 30 ) {
+        return "悶熱";
+    } else {
+        return "易中暑";
+    }
+}
+
+/* 轉換從api獲得的資料格式 */
+function tranDataFormat( dataset ) {
+    let newDataset = {};
+    for( let data of dataset ) {
+        let date = (data["startTime"].split(" "))[0];
+        if( newDataset[date] !== undefined ) {
+            newDataset[date].push(data);
+        } else {
+            newDataset[date] = [];
+            newDataset[date].push(data);
+        }
+    }
+    weekWeatherDataset = newDataset;
+}
+
+/* use for debug */
+function echoData( dataset ) {
+    console.log( dataset );
+}

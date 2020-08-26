@@ -8,13 +8,13 @@ CREATE TABLE weather (
     cityName varchar(15) not null,
     startTime datetime not null,
     endTime datetime not null,
-    minT tinyint,
-    maxT tinyint,
+    minT varchar(5),
+    maxT varchar(5),
     weatherClass tinyint,
     weatherCond char(30),
     comfortIdx tinyint,
-    rainProb tinyint,
-    wind tinyint,
+    rainProb varchar(5),
+    wind varchar(5),
     CONSTRAINT pk_Weather_Idx PRIMARY KEY ( cityName, startTime, endTime )
 ) DEFAULT CHARSET=utf8;
 

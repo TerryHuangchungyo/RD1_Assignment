@@ -19,4 +19,3 @@ header("Content-type: text/html; charset=utf-8;");
 var_dump($arr);
 curl_close( $ch );
 ?>
-
