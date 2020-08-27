@@ -16,6 +16,14 @@ $(document).ready(function(){
     });
 
     $("#city").trigger("change");
+
+    $("#rainBtn").click(function(){
+        $('#rainModal').modal('show')
+    });
+
+    $('#rainModal').on('show.bs.modal', function (e) {
+        $("#rainModalLabel > span").text($("#city").val());
+    })
 });
 
 function refreshWeatherData( resourceUrl, cityName ) {

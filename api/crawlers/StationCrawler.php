@@ -69,8 +69,7 @@ class StationCrawler extends Crawler {
                     $row["cityName"] = $station["countyName"];
                     $row["stationAddress"] = $station["stationAddress"];
                     $row["status"] = ($station["status"]== "現存測站" ? "true":"false");
-                    var_dump($row);
-                    echo "<br>";
+                    $formatData[] = $row;                
                 }
                 return $formatData;
             } catch( Exception $e ) {

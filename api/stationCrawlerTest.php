@@ -4,10 +4,15 @@ require_once "crawlers/StationCrawler.php";
 
 $crawler = new StationCrawler();
 
-$crawler->setUrl( OpenData::weekWeatherUrl )
+$result = $crawler->setUrl( OpenData::weekWeatherUrl )
         ->setAuthCode( OpenData::auth )
         ->setDatasetId( OpenData::stationDatasetId )
         ->getData();
 
-$crawler->setDatasetId( OpenData::noManStationDatasetId )
+$count = count($result);
+
+
+$result = $crawler->setDatasetId( OpenData::noManStationDatasetId )
         ->getData();
+$count += count($result);
+echo $count;
