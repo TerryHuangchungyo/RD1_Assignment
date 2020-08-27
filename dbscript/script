@@ -1,10 +1,11 @@
 -- 創建資料庫
 DROP DATABASE IF EXISTS RD1;
 CREATE DATABASE RD1;
+USE RD1;
 
 -- 創建天氣預報資料表
-DROP TABLE IF EXISTS weather;
-CREATE TABLE weather (
+DROP TABLE IF EXISTS weathers;
+CREATE TABLE weathers (
     cityName varchar(15) not null,
     startTime datetime not null,
     endTime datetime not null,
@@ -18,46 +19,56 @@ CREATE TABLE weather (
     CONSTRAINT pk_Weather_Idx PRIMARY KEY ( cityName, startTime, endTime )
 ) DEFAULT CHARSET=utf8;
 
--- 創建雨量累計資料表
-DROP TABLE IF EXISTS droplet;
-CREATE TABLE droplet (
-    cityName varchar(15) not null,
-    startTime datetime not null,
-    endTime datetime not null,
-    rain_1hr float,
-    rain_24hr float,
-    CONSTRAINT pk_Weather_Idx PRIMARY KEY ( cityName, startTime, endTime )
-) DEFAULT CHARSET=utf8;
-
--- 創建天氣更新時間表
+-- 創建天氣更新時間表 天氣1小時更新一次，降雨量30分鐘更新一次
 DROP TABLE IF EXISTS weatherUpdateTime;
 CREATE TABLE weatherUpdateTime (
     cityName varchar(15) primary key,
-    weekWeather datetime
-);
+    weekWeather datetime,
+    rain datetime
+) DEFAULT CHARSET=utf8;
 
 INSERT INTO weatherUpdateTime VALUES
-('臺北市', CURRENT_TIMESTAMP() ),
-('新北市', CURRENT_TIMESTAMP() ),
-('基隆市', CURRENT_TIMESTAMP() ),
-('桃園市', CURRENT_TIMESTAMP() ),
-('新竹縣', CURRENT_TIMESTAMP() ),
-('新竹市', CURRENT_TIMESTAMP() ),
-('苗栗縣', CURRENT_TIMESTAMP() ),
-('臺中市', CURRENT_TIMESTAMP() ),
-('南投縣', CURRENT_TIMESTAMP() ),
-('彰化縣', CURRENT_TIMESTAMP() ),
-('雲林縣', CURRENT_TIMESTAMP() ),
-('嘉義縣', CURRENT_TIMESTAMP() ),
-('嘉義市', CURRENT_TIMESTAMP() ),
-('臺南市', CURRENT_TIMESTAMP() ),
-('高雄市', CURRENT_TIMESTAMP() ),
-('屏東縣', CURRENT_TIMESTAMP() ),
-('宜蘭縣', CURRENT_TIMESTAMP() ),
-('花蓮縣', CURRENT_TIMESTAMP() ),
-('臺東縣', CURRENT_TIMESTAMP() ),
-('澎湖縣', CURRENT_TIMESTAMP() ),
-('金門縣', CURRENT_TIMESTAMP() ),
-('連江縣', CURRENT_TIMESTAMP() );
+('臺北市', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('新北市', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('基隆市', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('桃園市', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('新竹縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('新竹市', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('苗栗縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('臺中市', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('南投縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('彰化縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('雲林縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('嘉義縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('嘉義市', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('臺南市', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('高雄市', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('屏東縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('宜蘭縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('花蓮縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('臺東縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('澎湖縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('金門縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() ),
+('連江縣', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() );
 
+-- 創建站點基本資料表 longitude 經度 latitude 緯度
+DROP TABLE IF EXISTS stations;
+CREATE TABLE stations (
+    stationId varchar(15) primary key,
+    stationName varchar(20),
+    stationAltitude float,
+    longitude float, 
+    latitude float,
+    cityName varchar(10),
+    stationAddress varchar(40),
+    status boolean
+) DEFAULT CHARSET=utf8;
 
+-- 創建下雨基本資料表
+DROP TABLE IF EXISTS rains;
+CREATE TABLE rains (
+    rainId int primary key auto_increment,
+    stationId varchar(20),
+    rain_1hr float,
+    rain_24hr float
+) DEFAULT CHARSET=utf8;

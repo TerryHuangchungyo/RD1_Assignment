@@ -12,11 +12,24 @@ $(document).ready(function(){
     $("#city").change(function(){
         $("#TW_CityImg").prop("src","image/city/"+config.TW_CityImg[$(this).val()]);
         $("#cityName").text($(this).val());
-        getWeatherData( updateTodayWeatherUI, config.todayWeatherUrl, $("#city").val() );
+        refreshWeatherData( config.weekWeatherUrl, $(this).val());
     });
 
     $("#city").trigger("change");
 });
+
+function refreshWeatherData( resourceUrl, cityName ) {
+    $.ajax({
+        url: resourceUrl + cityName,
+        type: "PUT"
+    }).done( function( msg ) {
+        getWeatherData( updateTodayWeatherUI, config.todayWeatherUrl, cityName );
+        getWeatherData( updateTwodayWeatherUI, config.twodayWeatherUrl, cityName );
+        getWeatherData( updateWeekWeatherUI, config.weekWeatherUrl, cityName );
+    }).fail(function(){
+        alert("載入失敗");
+    });
+}
 
 function getWeatherData( callback = null, resourceUrl ,cityName ) {
     $.ajax({
@@ -40,10 +53,6 @@ function updateTodayWeatherUI( dataset ) {
     $("#today_comfortIdx").text( comfortIdxStmt(data["comfortIdx"]) );
     $("#today_rainProb").text( data["rainProb"] );
     $("#today_wind").text( data["wind"] );
-
-    // 當today資料更新完才可以拿twoday跟week的資料(issued)
-    getWeatherData( updateTwodayWeatherUI, config.twodayWeatherUrl, $("#city").val() );
-    getWeatherData( updateWeekWeatherUI, config.weekWeatherUrl, $("#city").val() );
 }
 
 function updateTwodayWeatherUI( dataset ) {

@@ -26,7 +26,7 @@ class Week {
         }
     }
 
-    public function updateData( $dataset, $cityName ) {
+    public function updateData( $cityName ) {
         $crawler = new WeekWeatherCrawler();
 
         $crawler->setUrl( OpenData::weekWeatherUrl );
@@ -39,32 +39,33 @@ class Week {
         $crawler->setToDate( $afterday );
         $crawler->setSort( "time" );
         $dataset = $crawler->getData();
-
-        try {
-            $dbStr = "mysql:host=".DB::dbhost.";dbname=".DB::dbname.";dbport=".DB::dbport.";";
-            $dblink = new PDO( $dbStr, DB::dbuser, DB::dbpass);
-            $dblink->query("DELETE FROM weather WHERE cityName =".$cityName );
-            $preStmt = "INSERT INTO ".DB::weatherTbName." 
-            (cityName, startTime, endTime, minT, maxT, weatherClass, weatherCond, comfortIdx, rainProb, wind) 
-            VALUES (:cityName, :startTime, :endTime, :minT, :maxT, :weatherClass, :weatherCond, :comfortIdx, :rainProb, :wind)";
-            
-            foreach( $dataset as $row ) {
-                $stmt = $dblink->prepare($preStmt);
-                $stmt->bindParam(":cityName",$row["cityName"]);
-                $stmt->bindParam(":startTime",$row["startTime"]);
-                $stmt->bindParam(":endTime",$row["endTime"]);
-                $stmt->bindParam(":minT",$row["minT"]);
-                $stmt->bindParam(":maxT",$row["maxT"]);
-                $stmt->bindParam(":weatherClass",$row["weatherClass"]);
-                $stmt->bindParam(":weatherCond",$row["weatherCond"]);
-                $stmt->bindParam(":comfortIdx",$row["comfortIdx"]);
-                $stmt->bindParam(":rainProb", $row["rainProb"]);
-                $stmt->bindParam(":wind",$row["wind"]);
-                $stmt->execute();
+        if( $dataset ) {
+            try {
+                $dbStr = "mysql:host=".DB::dbhost.";dbname=".DB::dbname.";dbport=".DB::dbport.";";
+                $dblink = new PDO( $dbStr, DB::dbuser, DB::dbpass);
+                $dblink->query("DELETE FROM weather WHERE cityName =".$cityName );
+                $preStmt = "INSERT INTO ".DB::weatherTbName." 
+                (cityName, startTime, endTime, minT, maxT, weatherClass, weatherCond, comfortIdx, rainProb, wind) 
+                VALUES (:cityName, :startTime, :endTime, :minT, :maxT, :weatherClass, :weatherCond, :comfortIdx, :rainProb, :wind)";
+                
+                foreach( $dataset as $row ) {
+                    $stmt = $dblink->prepare($preStmt);
+                    $stmt->bindParam(":cityName",$row["cityName"]);
+                    $stmt->bindParam(":startTime",$row["startTime"]);
+                    $stmt->bindParam(":endTime",$row["endTime"]);
+                    $stmt->bindParam(":minT",$row["minT"]);
+                    $stmt->bindParam(":maxT",$row["maxT"]);
+                    $stmt->bindParam(":weatherClass",$row["weatherClass"]);
+                    $stmt->bindParam(":weatherCond",$row["weatherCond"]);
+                    $stmt->bindParam(":comfortIdx",$row["comfortIdx"]);
+                    $stmt->bindParam(":rainProb", $row["rainProb"]);
+                    $stmt->bindParam(":wind",$row["wind"]);
+                    $stmt->execute();
+                }
+            } catch (PDOException $e) {
+                print "Error!: " . $e->getMessage() . "<br/>";
+                die();
             }
-        } catch (PDOException $e) {
-            print "Error!: " . $e->getMessage() . "<br/>";
-            die();
         }
     }
 }
