@@ -1,6 +1,7 @@
 <?php
 require("cores/config.php");
-$weatherDataId = OpenData::weatherDataId;
+set_error_handler('exceptions_error_handler');
+$weatherDataId = OpenData::weekDatasetId;
 $auth = OpenData::auth;
 
 $url =<<<QRY
@@ -17,10 +18,10 @@ curl_close( $ch );
 
 $arr = json_decode( $result, true );
 header("Content-type: text/html; charset=utf-8;");
-echo "<br>";
 $weatherData = Array();
-if( $arr["success"] ) {
+if(  $result && $arr["success"] === "true" ) {
     $formatData = [];
+    try {
     foreach( $arr["records"]["locations"][0]["location"] as $location ) {
         $weatherData = $location["weatherElement"];
         $row = [];
@@ -37,6 +38,10 @@ if( $arr["success"] ) {
             $row["wind"] = $weatherData[4]["time"][$i]["elementValue"][0]["value"];
             $formatData[] = $row;
         }
+    }
+    } catch( Exception $e ) {
+        echo "Fatal error";
+        exit;
     }
 
     try {
@@ -75,6 +80,15 @@ if( $arr["success"] ) {
     } catch (PDOException $e) {
         print "Error!: " . $e->getMessage() . "<br/>";
         die();
+    }
+}
+
+function exceptions_error_handler($severity, $message, $filename, $lineno) {
+    if (error_reporting() == 0) {
+      return;
+    }
+    if (error_reporting() & $severity) {
+      throw new ErrorException($message, 0, $severity, $filename, $lineno);
     }
 }
 ?>

@@ -29,3 +29,35 @@ CREATE TABLE droplet (
     CONSTRAINT pk_Weather_Idx PRIMARY KEY ( cityName, startTime, endTime )
 ) DEFAULT CHARSET=utf8;
 
+-- 創建天氣更新時間表
+DROP TABLE IF EXISTS weatherUpdateTime;
+CREATE TABLE weatherUpdateTime (
+    cityName varchar(15) primary key,
+    weekWeather datetime
+);
+
+INSERT INTO weatherUpdateTime VALUES
+('臺北市', CURRENT_TIMESTAMP() ),
+('新北市', CURRENT_TIMESTAMP() ),
+('基隆市', CURRENT_TIMESTAMP() ),
+('桃園市', CURRENT_TIMESTAMP() ),
+('新竹縣', CURRENT_TIMESTAMP() ),
+('新竹市', CURRENT_TIMESTAMP() ),
+('苗栗縣', CURRENT_TIMESTAMP() ),
+('臺中市', CURRENT_TIMESTAMP() ),
+('南投縣', CURRENT_TIMESTAMP() ),
+('彰化縣', CURRENT_TIMESTAMP() ),
+('雲林縣', CURRENT_TIMESTAMP() ),
+('嘉義縣', CURRENT_TIMESTAMP() ),
+('嘉義市', CURRENT_TIMESTAMP() ),
+('臺南市', CURRENT_TIMESTAMP() ),
+('高雄市', CURRENT_TIMESTAMP() ),
+('屏東縣', CURRENT_TIMESTAMP() ),
+('宜蘭縣', CURRENT_TIMESTAMP() ),
+('花蓮縣', CURRENT_TIMESTAMP() ),
+('臺東縣', CURRENT_TIMESTAMP() ),
+('澎湖縣', CURRENT_TIMESTAMP() ),
+('金門縣', CURRENT_TIMESTAMP() ),
+('連江縣', CURRENT_TIMESTAMP() );
+
+

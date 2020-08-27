@@ -1,6 +1,6 @@
 <?php
 require("cores/config.php");
-$weatherDataId = OpenData::weatherDataId;
+$weatherDataId = OpenData::weekDatasetIdId;
 $auth = OpenData::auth;
 $cityName = urlencode("臺北市");
 $url =<<<QRY
@@ -19,7 +19,7 @@ $arr = json_decode( $result, true );
 header("Content-type: text/html; charset=utf-8;");
 echo "<br>";
 $weatherData = Array();
-if( $arr["success"] ) {
+if( $result && $arr["success"] === "true" ) {
     $formatData = [];
     foreach( $arr["records"]["locations"][0]["location"] as $location ) {
         $weatherData = $location["weatherElement"];

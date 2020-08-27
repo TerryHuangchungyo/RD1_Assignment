@@ -13,8 +13,6 @@ $(document).ready(function(){
         $("#TW_CityImg").prop("src","image/city/"+config.TW_CityImg[$(this).val()]);
         $("#cityName").text($(this).val());
         getWeatherData( updateTodayWeatherUI, config.todayWeatherUrl, $("#city").val() );
-        getWeatherData( updateTwodayWeatherUI, config.twodayWeatherUrl, $("#city").val() );
-        getWeatherData( updateWeekWeatherUI, config.weekWeatherUrl, $("#city").val() );
     });
 
     $("#city").trigger("change");
@@ -26,8 +24,10 @@ function getWeatherData( callback = null, resourceUrl ,cityName ) {
         type: "GET"
     }).done( function( dataset ) {
         callback( dataset );
+        return true;
     }).fail(function(){
         alert("載入失敗");
+        return false;
     });
 }
 
@@ -40,6 +40,10 @@ function updateTodayWeatherUI( dataset ) {
     $("#today_comfortIdx").text( comfortIdxStmt(data["comfortIdx"]) );
     $("#today_rainProb").text( data["rainProb"] );
     $("#today_wind").text( data["wind"] );
+
+    // 當today資料更新完才可以拿twoday跟week的資料(issued)
+    getWeatherData( updateTwodayWeatherUI, config.twodayWeatherUrl, $("#city").val() );
+    getWeatherData( updateWeekWeatherUI, config.weekWeatherUrl, $("#city").val() );
 }
 
 function updateTwodayWeatherUI( dataset ) {
