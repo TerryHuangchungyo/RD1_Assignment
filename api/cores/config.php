@@ -2,7 +2,7 @@
 class DB
 {
     const dbuser = "root";
-    const dbpass = "";
+    const dbpass = "root";
     const dbhost = "localhost";
     const dbport = 8889;
     const dbname = "RD1";

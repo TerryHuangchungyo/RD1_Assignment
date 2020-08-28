@@ -1,18 +1,22 @@
 <?php
 require_once "cores/config.php";
+require_once "models/Station.php";
 require_once "crawlers/StationCrawler.php";
+require_once "controllers/StationController.php";
 
-$crawler = new StationCrawler();
+// $crawler = new StationCrawler();
+// $model = new Station;
 
-$result = $crawler->setUrl( OpenData::weekWeatherUrl )
-        ->setAuthCode( OpenData::auth )
-        ->setDatasetId( OpenData::stationDatasetId )
-        ->getData();
+// $result = $crawler->setUrl( OpenData::weekWeatherUrl )
+//         ->setAuthCode( OpenData::auth )
+//         ->setDatasetId( OpenData::stationDatasetId )
+//         ->getData();
+// $model->updateData($result);
 
-$count = count($result);
+// $result = $crawler->setDatasetId( OpenData::noManStationDatasetId )
+//         ->getData();
+// $model->updateData($result);
 
-
-$result = $crawler->setDatasetId( OpenData::noManStationDatasetId )
-        ->getData();
-$count += count($result);
-echo $count;
+$_SERVER["REQUEST_METHOD"] = "PUT";
+$c = new StationController;
+$c->info();

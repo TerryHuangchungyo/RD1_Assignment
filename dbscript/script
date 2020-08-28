@@ -61,8 +61,7 @@ CREATE TABLE stations (
     longitude float, 
     latitude float,
     cityName varchar(10),
-    stationAddress varchar(40),
-    status boolean
+    stationAddress varchar(40)
 ) DEFAULT CHARSET=utf8;
 
 -- 創建下雨基本資料表
