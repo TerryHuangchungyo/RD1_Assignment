@@ -2,7 +2,7 @@ import config from "./config.js";
 
 var weekWeatherDataset;
 var currentIndex;
-
+var refreshing = false;
 
 $(document).ready(function(){
     for( let cityName of config.TW_CityName ) {
@@ -15,13 +15,13 @@ $(document).ready(function(){
         $("#cityName").text($(this).val());
         refreshWeatherData( config.weekWeatherUrl, $(this).val());
         getRainAvgData( updateRainAvgUI, config.rainAvgDataUrl, $(this).val() );
-        getRainData( updateRainUI, config.rainDataUrl, $(this).val() );
     });
 
     $("#city").trigger("change");
     refreshStationData( config.stationDataUrl );
     
     $("#rainBtn").click(function(){
+        getRainData( updateRainUI, config.rainDataUrl, $("#city").val() );
         $('#rainModal').modal('show')
     });
 
@@ -35,7 +35,7 @@ function refreshStationData( resourceUrl ) {
         url: resourceUrl,
         type: "PUT",
         beforeSend: function() {
-            $("#city").prop("disabled",true);
+            refreshing = true;
             $("#rainBtn").prop("disabled",true);
             $("#rainBtn").text("更新中...");
         }
@@ -51,7 +51,7 @@ function refreshRainData( resourceUrl ) {
         url: resourceUrl,
         type: "PUT",
     }).done( function( msg ) {
-        $("#city").prop("disabled",false);
+        refreshing = false;
         $("#rainBtn").prop("disabled", false);
         $("#rainBtn").text("查看各觀測站降雨資料");
         getRainAvgData( updateRainAvgUI, config.rainAvgDataUrl, $("#city").val() );
@@ -62,14 +62,16 @@ function refreshRainData( resourceUrl ) {
 }
 
 function getRainAvgData( callback = null, resourceUrl, cityName ) {
-    $.ajax({
-        url: resourceUrl + cityName,
-        type: "GET"
-    }).done( function( data ) {
-        callback( data[0] );
-    }).fail(function(){
-        alert("載入失敗");
-    });
+    if( !refreshing ) {
+        $.ajax({
+            url: resourceUrl + cityName,
+            type: "GET"
+        }).done( function( data ) {
+            callback( data[0] );
+        }).fail(function(){
+            alert("載入失敗");
+        });
+    }
 }
 
 function updateRainAvgUI( data ) {
