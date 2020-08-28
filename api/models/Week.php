@@ -11,11 +11,7 @@ class Week {
             $stmt = $dblink->prepare( "SELECT startTime, endTime, minT, maxT, weatherCond, weatherClass, comfortIdx, rainProb, wind FROM ".DB::weatherTbName.
             " WHERE DATE(startTime) BETWEEN DATE_ADD(CURRENT_DATE(), INTERVAL 1 DAY) AND DATE_ADD(CURRENT_DATE(), INTERVAL 6 DAY) AND cityName = ? ORDER BY startTime");
             if($stmt->execute(array( $cityName ))) {
-                $dataset = [];
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $dataset[] = $row;
-                }
-                return $dataset;
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
             } else {
                 return null;
             }

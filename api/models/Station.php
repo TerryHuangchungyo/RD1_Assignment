@@ -1,7 +1,13 @@
 <?php
 class Station {
-    public function updateData( $dataset ) {
-        if( $dataset ) {
+    public function updateData( $stationDatasetId ) {
+        if( $stationDatasetId ) {
+            $crawler = new StationCrawler();
+            $dataset = $crawler->setUrl( OpenData::weekWeatherUrl )
+                            ->setAuthCode( OpenData::auth )
+                            ->setDatasetId( $stationDatasetId )
+                            ->getData();
+            
             try {
 
                 $dbStr = "mysql:host=".DB::dbhost.";dbname=".DB::dbname.";dbport=".DB::dbport.";";

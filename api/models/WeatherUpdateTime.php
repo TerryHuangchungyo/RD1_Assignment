@@ -1,15 +1,15 @@
 <?php
 require_once "cores/config.php";
 
-class UpdateTime {
+class WeatherUpdateTime {
     public function getData( $columnName, $cityName ) {
         try {
             $dbInfo = "mysql:host=".DB::dbhost.";dbname=".DB::dbname.";dbport=".DB::dbport.";";
             $dblink = new PDO( $dbInfo, DB::dbuser, DB::dbpass );
-            $stmt = $dblink->prepare( "SELECT $columnName FROM weatherUpdateTime WHERE cityName = ?;");
+            $stmt = $dblink->prepare( "SELECT $columnName FROM ".DB::weatherUpdateTbName." WHERE cityName = ?;");
             if($stmt->execute(array( $cityName ))) {
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                return $result["weekWeather"];
+                return $result[$columnName];
             } else {
                 return "";
             }
@@ -24,7 +24,7 @@ class UpdateTime {
         try {
             $dbInfo = "mysql:host=".DB::dbhost.";dbname=".DB::dbname.";dbport=".DB::dbport.";";
             $dblink = new PDO( $dbInfo, DB::dbuser, DB::dbpass );
-            $stmt = $dblink->prepare( "UPDATE weatherUpdateTime SET $columnName = ? WHERE cityName = ?;");
+            $stmt = $dblink->prepare( "UPDATE ".DB::weatherUpdateTbName." SET $columnName = ? WHERE cityName = ?;");
             if($stmt->execute(array( $dataTime, $cityName ))) {
                 return true;
             } else {

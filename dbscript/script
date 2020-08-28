@@ -19,13 +19,12 @@ CREATE TABLE weathers (
     CONSTRAINT pk_Weather_Idx PRIMARY KEY ( cityName, startTime, endTime )
 ) DEFAULT CHARSET=utf8;
 
--- 創建天氣更新時間表 天氣1小時更新一次，降雨量30分鐘更新一次 氣象站90天更新一次
+-- 創建天氣更新時間表 天氣1小時更新一次 
 DROP TABLE IF EXISTS weatherUpdateTime;
 CREATE TABLE weatherUpdateTime (
     cityName varchar(15) primary key,
     weekWeather datetime DEFAULT '1970-01-01 00:00:01',
-    rain datetime DEFAULT '1970-01-01 00:00:01',
-    station datetime DEFAULT '1970-01-01 00:00:01'
+    rain datetime DEFAULT '1970-01-01 00:00:01'
 ) DEFAULT CHARSET=utf8;
 
 INSERT INTO weatherUpdateTime( cityName ) VALUES
@@ -52,6 +51,15 @@ INSERT INTO weatherUpdateTime( cityName ) VALUES
 ('金門縣' ),
 ('連江縣' );
 
+-- 創建站點更新時間表 氣象站資訊90天更新一次，降雨量30分鐘更新一次
+DROP TABLE IF EXISTS stationUpdateTime;
+CREATE TABLE stationUpdateTime (
+    id int,
+    station datetime DEFAULT '1970-01-01 00:00:01',
+    rain datetime DEFAULT '1970-01-01 00:00:01'
+) DEFAULT CHARSET=utf8;
+INSERT INTO stationUpdateTime( id ) VALUES( 0 );
+
 -- 創建站點基本資料表 longitude 經度 latitude 緯度
 DROP TABLE IF EXISTS stations;
 CREATE TABLE stations (
@@ -72,3 +80,7 @@ CREATE TABLE rains (
     rain_1hr float,
     rain_24hr float
 ) DEFAULT CHARSET=utf8;
+
+-- 查詢各城市各站點下雨資料
+
+-- SELECT s.stationId, stationName, stationAltitude, longitude, latitude, cityName, stationAddress, rain_1hr, rain_24hr FROM stations s JOIN rains r ON s.stationId = r.stationId WHERE cityName = "臺中市";

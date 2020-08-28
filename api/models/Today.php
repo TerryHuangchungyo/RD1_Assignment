@@ -9,11 +9,7 @@ class Today {
             $dblink = new PDO( $dbInfo, DB::dbuser, DB::dbpass );
             $stmt = $dblink->prepare( "SELECT minT, maxT, weatherCond, weatherClass, comfortIdx, rainProb, wind FROM ".DB::weatherTbName." WHERE ? BETWEEN startTime AND endTime AND cityName = ?");
             if($stmt->execute(array( $currentDateTime, $cityName ))) {
-                $dataset = [];
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $dataset[] = $row;
-                }
-                return $dataset;
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
             } else {
                 return null;
             }
