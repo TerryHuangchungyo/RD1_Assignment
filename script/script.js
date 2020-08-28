@@ -73,9 +73,9 @@ function getRainAvgData( callback = null, resourceUrl, cityName ) {
 }
 
 function updateRainAvgUI( data ) {
-    let str_1hr = ( parseFloat(data["avg_1hr"])>0 ? data["avg_1hr"]+" mm" : "沒有資料" );
+    let str_1hr = ( parseFloat(data["avg_1hr"])>=0 ? data["avg_1hr"]+" mm" : "沒有資料" );
     $("#avg_1hr").text( str_1hr );
-    let str_24hr = ( parseFloat(data["avg_24hr"])>0 ? data["avg_24hr"]+" mm" : "沒有資料" );
+    let str_24hr = ( parseFloat(data["avg_24hr"])>=0 ? data["avg_24hr"]+" mm" : "沒有資料" );
     $("#avg_24hr").text( str_24hr );
 }
 
@@ -93,8 +93,8 @@ function getRainData( callback = null, resourceUrl, cityName ) {
 function updateRainUI( dataset ) {
     $("#rainTableBody").empty();
     dataset.forEach( ( data ) => {
-        data["rain_1hr"] = ( parseFloat(data["rain_1hr"])>0 ? data["rain_1hr"]+" mm" : "沒有資料" );
-        data["rain_24hr"] = ( parseFloat(data["rain_24hr"])>0 ? data["rain_24hr"]+" mm" : "沒有資料" );
+        data["rain_1hr"] = ( parseFloat(data["rain_1hr"])>= 0 ? data["rain_1hr"]+" mm" : "沒有資料" );
+        data["rain_24hr"] = ( parseFloat(data["rain_24hr"])>= 0 ? data["rain_24hr"]+" mm" : "沒有資料" );
 
         let row = $("<tr></tr>").append(`<td>${data["stationId"]}</td>`)
                                 .append(`<td>${data["stationName"]}</td>`)

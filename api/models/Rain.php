@@ -61,11 +61,11 @@ class Rain {
             $dblink = new PDO( $dbStr, DB::dbuser, DB::dbpass);
             $avg1hr_Stmt = "SELECT ROUND(AVG(result.rain_1hr),2) as avg_1hr
             FROM (SELECT rain_1hr FROM ".DB::stationTbName." s JOIN ".DB::rainTbName." r ON s.stationId = r.stationId WHERE cityName = :cityName ) as result
-            WHERE rain_1hr > 0";
+            WHERE rain_1hr >= 0";
 
             $avg24hr_Stmt = "SELECT ROUND(AVG(result.rain_24hr),2) as avg_24hr
             FROM (SELECT rain_24hr FROM ".DB::stationTbName." s JOIN ".DB::rainTbName." r ON s.stationId = r.stationId WHERE cityName = :cityName ) as result
-            WHERE rain_24hr > 0";
+            WHERE rain_24hr >= 0";
 
             $result["avg_1hr"] = -1;
             $result["avg_24hr"] = -1;
