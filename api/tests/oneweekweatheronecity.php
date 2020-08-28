@@ -1,5 +1,5 @@
 <?php
-require("cores/config.php");
+require("../cores/config.php");
 $weatherDataId = OpenData::weekDatasetIdId;
 $auth = OpenData::auth;
 $cityName = urlencode("臺北市");

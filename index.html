@@ -45,9 +45,9 @@
                     <div class="col-2 offset-1 mt-1 my-auto"><img src="image/util/drop.png" alt="drop" class="in-card-img img-fluid ml-auto"></div>
                     <div class="col-4 p-2 my-auto">
                         <h5>過去1小時降雨量</h5>
-                        <p>0.5 mm</p>
+                        <p id="avg_1hr">0.5 mm</p>
                         <h5>過去24小時降雨量</h5>
-                        <p>24 mm</p>
+                        <p id="avg_24hr">24 mm</p>
                         <button id="rainBtn" type="button" class="btn btn-info">查看各觀測站降雨資料</button>
                     </div>
                 </div>
@@ -143,7 +143,7 @@
                         </div>
                     </div>
                     <div class="my-3 row">
-                        <div id="weatherBoxset" class="offset-2 col-8 d-flex justify-content-around flex-wrap">
+                        <div id="weatherBoxset" class="offset-3 col-8 d-flex">
                             <div class="little-box bg-light p-2 border rounded">
                                 <h5 class="text-center">8/24</h5>
                                 <div></div>
@@ -167,7 +167,7 @@
             </button>
             </div>
             <div class="modal-body">
-                <table id="rainTable" class="table table-hover table-sm">
+                <table class="table table-hover table-sm">
                     <thead class="thead-light">
                       <tr>
                         <th scope="col">代號</th>
@@ -180,7 +180,7 @@
                         <th scope="col">過去24hr降雨量</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="rainTableBody">
                         <tr>
                             <td>466850</td>
                             <td>五分山雷達站</td>

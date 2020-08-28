@@ -1,5 +1,5 @@
 <?php
-require("cores/config.php");
+require("../cores/config.php");
 set_error_handler('exceptions_error_handler');
 $weatherDataId = OpenData::weekDatasetId;
 $auth = OpenData::auth;

@@ -1,5 +1,5 @@
 <?php
-require_once "models/UpdateTime.php";
+require_once "../models/UpdateTime.php";
 
 $model = new UpdateTime;
 var_dump($model->getData( 'weekWeather', "臺北市" ));

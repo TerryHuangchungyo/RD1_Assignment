@@ -1,8 +1,8 @@
 <?php
-require_once "cores/config.php";
-require_once "models/Station.php";
-require_once "crawlers/StationCrawler.php";
-require_once "controllers/StationController.php";
+require_once "../cores/config.php";
+require_once "../models/Station.php";
+require_once "../crawlers/StationCrawler.php";
+require_once "../controllers/StationController.php";
 
 // $crawler = new StationCrawler();
 // $model = new Station;

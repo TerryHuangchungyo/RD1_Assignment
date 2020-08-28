@@ -3,7 +3,7 @@ require_once "cores/config.php";
 require_once "cores/controller.php";
 
 class StationController extends Controller {
-    public function info() {
+    public function info( $param = null ) {
         switch( $_SERVER["REQUEST_METHOD"] ) {
             case "PUT":
                 $pastUpdateTime = $this->model("StationUpdateTime")->getData( "station" );

@@ -1,6 +1,6 @@
 <?php
-require_once "crawlers/WeekWeatherCrawler.php";
-require_once "cores/config.php";
+require_once "../crawlers/WeekWeatherCrawler.php";
+require_once "../cores/config.php";
 
 $crawler = new WeekWeatherCrawler();
 

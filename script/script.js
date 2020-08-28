@@ -3,6 +3,7 @@ import config from "./config.js";
 var weekWeatherDataset;
 var currentIndex;
 
+
 $(document).ready(function(){
     for( let cityName of config.TW_CityName ) {
         $("#city").append(`<option>${cityName}</option>`);
@@ -13,10 +14,13 @@ $(document).ready(function(){
         $("#TW_CityImg").prop("src","image/city/"+config.TW_CityImg[$(this).val()]);
         $("#cityName").text($(this).val());
         refreshWeatherData( config.weekWeatherUrl, $(this).val());
+        getRainAvgData( updateRainAvgUI, config.rainAvgDataUrl, $(this).val() );
+        getRainData( updateRainUI, config.rainDataUrl, $(this).val() );
     });
 
     $("#city").trigger("change");
-
+    refreshStationData( config.stationDataUrl );
+    
     $("#rainBtn").click(function(){
         $('#rainModal').modal('show')
     });
@@ -25,6 +29,84 @@ $(document).ready(function(){
         $("#rainModalLabel > span").text($("#city").val());
     })
 });
+
+function refreshStationData( resourceUrl ) {
+    $.ajax({
+        url: resourceUrl,
+        type: "PUT",
+        beforeSend: function() {
+            $("#city").prop("disabled",true);
+            $("#rainBtn").prop("disabled",true);
+            $("#rainBtn").text("更新中...");
+        }
+    }).done( function( msg ) {
+        refreshRainData( config.rainDataUrl );
+    }).fail(function(){
+        alert("更新站台資料失敗");
+    });
+}
+
+function refreshRainData( resourceUrl ) {
+    $.ajax({
+        url: resourceUrl,
+        type: "PUT",
+    }).done( function( msg ) {
+        $("#city").prop("disabled",false);
+        $("#rainBtn").prop("disabled", false);
+        $("#rainBtn").text("查看各觀測站降雨資料");
+        getRainAvgData( updateRainAvgUI, config.rainAvgDataUrl, $("#city").val() );
+        getRainData( updateRainUI, config.rainDataUrl, $("#city").val() );
+    }).fail(function(){
+        alert("更新雨量資料失敗");
+    });
+}
+
+function getRainAvgData( callback = null, resourceUrl, cityName ) {
+    $.ajax({
+        url: resourceUrl + cityName,
+        type: "GET"
+    }).done( function( data ) {
+        callback( data[0] );
+    }).fail(function(){
+        alert("載入失敗");
+    });
+}
+
+function updateRainAvgUI( data ) {
+    let str_1hr = ( parseFloat(data["avg_1hr"])>0 ? data["avg_1hr"]+" mm" : "沒有資料" );
+    $("#avg_1hr").text( str_1hr );
+    let str_24hr = ( parseFloat(data["avg_24hr"])>0 ? data["avg_24hr"]+" mm" : "沒有資料" );
+    $("#avg_24hr").text( str_24hr );
+}
+
+function getRainData( callback = null, resourceUrl, cityName ) {
+    $.ajax({
+        url: resourceUrl + cityName,
+        type: "GET"
+    }).done( function( dataset ) {
+        callback( dataset );
+    }).fail(function(){
+        alert("載入失敗");
+    });
+}
+
+function updateRainUI( dataset ) {
+    $("#rainTableBody").empty();
+    dataset.forEach( ( data ) => {
+        data["rain_1hr"] = ( parseFloat(data["rain_1hr"])>0 ? data["rain_1hr"]+" mm" : "沒有資料" );
+        data["rain_24hr"] = ( parseFloat(data["rain_24hr"])>0 ? data["rain_24hr"]+" mm" : "沒有資料" );
+
+        let row = $("<tr></tr>").append(`<td>${data["stationId"]}</td>`)
+                                .append(`<td>${data["stationName"]}</td>`)
+                                .append(`<td>${data["stationAltitude"]}</td>`)
+                                .append(`<td>${data["longitude"]}</td>`)
+                                .append(`<td>${data["latitude"]}</td>`)
+                                .append(`<td>${data["stationAddress"]}</td>`)
+                                .append(`<td class="text-right">${data["rain_1hr"]}</td>`)
+                                .append(`<td class="text-right">${data["rain_24hr"]}</td>`);
+        row.appendTo( $("#rainTableBody") );
+    });
+}
 
 function refreshWeatherData( resourceUrl, cityName ) {
     $.ajax({
@@ -87,6 +169,7 @@ function updateWeekWeatherUI( dataset ) {
             let weatherBox = $("<div></div>").addClass("little-box")
                                             .addClass("bg-light")
                                             .addClass("p-2")
+                                            .addClass("ml-2")
                                             .addClass("border")
                                             .addClass("rounded")
                                             .appendTo($("#weatherBoxset"));
@@ -111,7 +194,7 @@ function updateWeekWeatherUI( dataset ) {
                 for( let idx in weekWeatherData ) {
                     let data = weekWeatherData[idx];
                     let image = $("img.week-img").eq(idx);
-            image.prop( "src", `image/weather/${config.weatherClassImg[data['weatherClass']]}.png` );
+                    image.prop( "src", `image/weather/${config.weatherClassImg[data['weatherClass']]}.png` );
                     let fieldset = $("div .week-info").eq(idx);
                     fieldset.find('span.minT').text( data["minT"] );
                     fieldset.find('span.maxT').text( data["maxT"] );

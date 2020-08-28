@@ -1,4 +1,5 @@
 <?php
+require_once "crawlers/StationCrawler.php";
 class Station {
     public function updateData( $stationDatasetId ) {
         if( $stationDatasetId ) {

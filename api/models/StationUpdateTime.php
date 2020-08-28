@@ -6,7 +6,7 @@ class StationUpdateTime {
         try {
             $dbInfo = "mysql:host=".DB::dbhost.";dbname=".DB::dbname.";dbport=".DB::dbport.";";
             $dblink = new PDO( $dbInfo, DB::dbuser, DB::dbpass );
-            $stmt = $dblink->prepare( "SELECT $columnName FROM".DB::stationUpdateTbName."WHERE id = 0;");
+            $stmt = $dblink->prepare( "SELECT $columnName FROM ".DB::stationUpdateTbName." WHERE id = 0;");
             if($stmt->execute()) {
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
                 return $result[$columnName];

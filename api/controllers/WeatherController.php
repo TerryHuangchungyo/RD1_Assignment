@@ -65,11 +65,6 @@ class WeatherController extends Controller {
     }
 
     public function rain( $cityName = null ) {
-        if( $cityName === null ) {
-            header( "HTTP/1.1 404 Not Found" );
-            exit;
-        }
-
         switch( $_SERVER["REQUEST_METHOD"] ) {
             case "GET":
                 if( $cityName === null ) {
@@ -80,11 +75,7 @@ class WeatherController extends Controller {
                 $this->view( "JsonAPI", $data );
                 break;
             case "PUT":
-                if( $cityName === null ) {
-                    header( "HTTP/1.1 404 Not Found" );
-                    exit;
-                }
-                $pastUpdateTime = $this->model("stationUpdateTime")->getData( "rain", $cityName );
+                $pastUpdateTime = $this->model("StationUpdateTime")->getData( "rain" );
                 sscanf($pastUpdateTime, "%d-%d-%d %d:%d:%d", $y, $m,$d, $h, $i, $s );
                 $pastUpdateTimeStamp = mktime( $h, $i, $s, $m, $d, $y );
                 $currentTimeStamp = mktime(date("H")+8, date("i"), date("s"), date("m"), date("d"), date("Y"));
@@ -92,7 +83,7 @@ class WeatherController extends Controller {
                 // echo ($currentTimeStamp - $pastUpdateTimeStamp); use for debug
                 if( ($currentTimeStamp - $pastUpdateTimeStamp) > 30*60*60 ) {
                     $this->model("Rain")->updateData();
-                    $this->model("stationUpdateTime")->updateData( "rain", $cityName, $currentTime );
+                    $this->model("StationUpdateTime")->updateData( "rain", $currentTime );
                 }
                 break;
         }
