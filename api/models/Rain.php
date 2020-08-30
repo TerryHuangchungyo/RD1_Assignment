@@ -12,7 +12,7 @@ class Rain {
 
             $dbStr = "mysql:host=".DB::dbhost.";dbname=".DB::dbname.";dbport=".DB::dbport.";";
             $dblink = new PDO( $dbStr, DB::dbuser, DB::dbpass);
-            $dblink->query("TRUNCATE TABlE ".DB::rainTbName);
+            $dblink->query("TRUNCATE TABLE ".DB::rainTbName);
             $insertPreStmt = "INSERT INTO ".DB::rainTbName." 
             ( stationId, rain_1hr, rain_24hr ) VALUES (:stationId, :rain_1hr, :rain_24hr )";
 

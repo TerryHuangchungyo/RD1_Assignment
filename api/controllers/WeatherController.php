@@ -81,7 +81,7 @@ class WeatherController extends Controller {
                 $currentTimeStamp = mktime(date("H")+8, date("i"), date("s"), date("m"), date("d"), date("Y"));
                 $currentTime = date("Y-m-d H:i:s", $currentTimeStamp );
                 // echo ($currentTimeStamp - $pastUpdateTimeStamp); use for debug
-                if( ($currentTimeStamp - $pastUpdateTimeStamp) > 30*60*60 ) {
+                if( ($currentTimeStamp - $pastUpdateTimeStamp) > 30*60 ) {
                     $this->model("Rain")->updateData();
                     $this->model("StationUpdateTime")->updateData( "rain", $currentTime );
                 }

@@ -10,7 +10,11 @@ class API {
             unset($url[0]);
             unset($url[1]);
             $param = $url ? array_values($url) : Array();
-            call_user_func_array( array( $controller, $method ), $param );
+            if( method_exists( $controller, $method ) ) {
+                call_user_func_array( array( $controller, $method ), $param );
+            } else {
+                header( "HTTP/1.1 404 Not Found" );
+            }
         } else {
             header( "HTTP/1.1 404 Not Found" );
         }
