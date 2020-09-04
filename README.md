@@ -2,7 +2,7 @@
 ![網站首頁](demo/indexPage.png)
 ## 使用説明
 ----
-1. 將此資料夾放到網站伺服器根目錄底下
+1. 將此資料夾放到網站伺服器根目錄底下
 2. 根據資料庫設定修改"api/cores/config.php"的內容dbuser 帳號, dbpass 密碼, dbhost 域名, dbport port
 3. 將dbscript/script.txt的SQL語句拿到SQL commndline或phpmyadmin執行
 4. 打開瀏覽器並輸入localhost/RD1_Assignment
@@ -27,7 +27,7 @@
 │   │   └── WeatherController.php -- 負責處理天氣數據API的邏輯
 │   ├── cores       -- 專案會用到的基本函式庫
 │   │   ├── api.php         -- 創造一個API服務，並根據路徑提供不同的服務
-│   │   ├── config.php      -- 專案會用到的相關設定( 資料庫與爬蟲網址相關路徑)
+│   │   ├── config.php      -- 專案會用到的相關設定( 資料庫與爬蟲網址相關路徑)
 │   │   ├── controller.php  -- 控制器類別
 │   │   └── crawler.php     -- 負責爬取中央氣象局資料的類別( 抽象類別，必須繼承客製化爬蟲)
 │   ├── crawlers -- 客製化的爬蟲類別
