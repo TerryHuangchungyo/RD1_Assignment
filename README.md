@@ -1,14 +1,14 @@
 # RD1_Assignment: 個人氣象站
 ![網站首頁](demo/indexPage.png)
 ## 使用説明
-----
+
 1. 將此資料夾放到網站伺服器根目錄底下
 2. 根據資料庫設定修改"api/cores/config.php"的內容dbuser 帳號, dbpass 密碼, dbhost 域名, dbport port
 3. 將dbscript/script.txt的SQL語句拿到SQL commndline或phpmyadmin執行
 4. 打開瀏覽器並輸入localhost/RD1_Assignment
 
 ## 專案說明
-----
+
 1. 製作一個個人氣象網站，並且實作以下功能:
     * 縣市選擇:可自行選擇要查看的縣市
     * 顯示縣市當前天氣狀況
@@ -17,8 +17,8 @@
     * 切換縣市時，顯示該縣市的特色圖片
 2. 上述各式氣象資料，儲存於資料庫
 
-## 專案資料夾架構
-----
+## 專案資料夾結構
+
 ```
 .
 ├── README.md  -- 專案說明文件
@@ -58,15 +58,15 @@
     └── script.js -- index.html 前端腳本
 ```
 ## 系統架構
-----
+
 ![系統架構](demo/system.png)
 
 ## 資料庫實體關係圖
-----
+
 ![資料庫實體關係圖](demo/ER-Diagram.png)
 
 ## 實作成果
-----
+
 首頁
 ![首頁](demo/home.png)
 一週天氣
@@ -75,7 +75,6 @@
 ![各觀測站雨量資料](demo/rain.png)
 
 ## 圖片出處
-----
 [天氣圖片](https://www.pinterest.com/pin/459015386992964638/)
 
 ## 參考資料
