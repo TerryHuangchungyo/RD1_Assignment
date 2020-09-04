@@ -57,8 +57,8 @@ class WeatherController extends Controller {
                 $currentTime = date("Y-m-d H:i:s", $currentTimeStamp );
                 // echo ($currentTimeStamp - $pastUpdateTimeStamp); use for debug
                 if( ($currentTimeStamp - $pastUpdateTimeStamp) > 3600 ) {
-                    $this->model("Week")->updateData( $cityName );
                     $this->model("WeatherUpdateTime")->updateData( "weekWeather", $cityName, $currentTime );
+                    $this->model("Week")->updateData( $cityName );
                 }
                 break;
         }
@@ -82,8 +82,8 @@ class WeatherController extends Controller {
                 $currentTime = date("Y-m-d H:i:s", $currentTimeStamp );
                 // echo ($currentTimeStamp - $pastUpdateTimeStamp); use for debug
                 if( ($currentTimeStamp - $pastUpdateTimeStamp) > 30*60 ) {
-                    $this->model("Rain")->updateData();
                     $this->model("StationUpdateTime")->updateData( "rain", $currentTime );
+                    $this->model("Rain")->updateData();
                 }
                 break;
         }
