@@ -1,8 +1,8 @@
 <?php
 require("../cores/config.php");
-$weatherDataId = OpenData::weekDatasetIdId;
+$weatherDataId = OpenData::weekDatasetId;
 $auth = OpenData::auth;
-$cityName = urlencode("臺北市");
+$cityName = urlencode("臺中市");
 $url =<<<QRY
 https://opendata.cwb.gov.tw/api/v1/rest/datastore/$weatherDataId?Authorization=$auth&locationName=$cityName
 QRY;

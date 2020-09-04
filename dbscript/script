@@ -62,7 +62,7 @@ INSERT INTO stationUpdateTime( id ) VALUES( 0 );
 -- 創建站點基本資料表 longitude 經度 latitude 緯度
 DROP TABLE IF EXISTS stations;
 CREATE TABLE stations (
-    stationId varchar(15) primary key,
+    stationId varchar(20) primary key,
     stationName varchar(20),
     stationAltitude float,
     longitude float, 
